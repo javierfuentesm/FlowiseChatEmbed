@@ -448,7 +448,7 @@ export const BotBubble = (props: Props) => {
                   const metadata = src.metadata;
                   return (
                     <SourceBubble
-                      pageContent={metadata.titulo || 'Sin título'} // Usar el título en lugar del contenido
+                      pageContent={metadata.titulo || 'No lo se Rick'} // Usar el título en lugar del contenido
                       metadata={{
                         ...metadata,
                         source: metadata.URL || metadata.source, // Priorizar el URL de la metadata
