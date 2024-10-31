@@ -436,7 +436,7 @@ export const BotBubble = (props: Props) => {
 
                   return (
                     <SourceBubble
-                      pageContent={URL ? URL.pathname : src.titulo}
+                      pageContent={URL ? src.titulo : 'Sin contenido'}
                       metadata={{
                         ...metadata,
                         source: metadata.URL || metadata.source, // Priorizar el URL de la metadata
@@ -444,9 +444,9 @@ export const BotBubble = (props: Props) => {
                       }}
                       onSourceClick={() => {
                         if (metadata.URL) {
-                          window.open(metadata.URL);
+                          window.location.href = metadata.URL;
                         } else if (isValidURL(metadata.source)) {
-                          window.open(metadata.source, '_blank');
+                          window.location.href = metadata.source;
                         } else {
                           props.handleSourceDocumentsClick(src);
                         }
