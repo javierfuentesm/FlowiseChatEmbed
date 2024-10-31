@@ -423,22 +423,40 @@ export const BotBubble = (props: Props) => {
         </div>
       </div>
       <div>
-        {props.message.sourceDocuments && props.message.sourceDocuments.length && (
+        {props.message.sourceDocuments && props.message.sourceDocuments.length > 0 && (
           <>
             <Show when={props.sourceDocsTitle}>
               <span class="px-2 py-[10px] font-semibold">{props.sourceDocsTitle}</span>
             </Show>
             <div style={{ display: 'flex', 'flex-direction': 'row', width: '100%', 'flex-wrap': 'wrap' }}>
-              <For each={[...removeDuplicateURL(props.message)]}>
+              <For each={(() => {
+                // Crear un Set para almacenar fuentes únicas basadas en URL
+                const uniqueSources = new Set();
+                const uniqueDocs = props.message.sourceDocuments.filter((doc: { metadata: { URL: string; titulo: string } }) => {
+                  const sourceId = doc.metadata.URL || doc.metadata.titulo;
+                  if (!uniqueSources.has(sourceId)) {
+                    uniqueSources.add(sourceId);
+                    return true;
+                  }
+                  return false;
+                });
+                return uniqueDocs;
+              })()}>
                 {(src) => {
-                  const URL = isValidURL(src.metadata.source);
+                  const metadata = src.metadata;
                   return (
                     <SourceBubble
-                      pageContent={URL ? URL.pathname : src.pageContent}
-                      metadata={src.metadata}
+                      pageContent={metadata.Titulo || 'Sin título'} // Usar el título en lugar del contenido
+                      metadata={{
+                        ...metadata,
+                        source: metadata.URL || metadata.source, // Priorizar el URL de la metadata
+                        title: metadata.Titulo || metadata.title // Priorizar el Titulo de la metadata
+                      }}
                       onSourceClick={() => {
-                        if (URL) {
-                          window.open(src.metadata.source, '_blank');
+                        if (metadata.URL) {
+                          window.open(metadata.URL, '_blank');
+                        } else if (isValidURL(metadata.source)) {
+                          window.open(metadata.source, '_blank');
                         } else {
                           props.handleSourceDocumentsClick(src);
                         }
