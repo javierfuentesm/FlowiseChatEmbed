@@ -429,27 +429,14 @@ export const BotBubble = (props: Props) => {
               <span class="px-2 py-[10px] font-semibold">{props.sourceDocsTitle}</span>
             </Show>
             <div style={{ display: 'flex', 'flex-direction': 'row', width: '100%', 'flex-wrap': 'wrap' }}>
-              <For
-                each={(() => {
-                  // Crear un Set para almacenar fuentes únicas basadas en URL
-                  const uniqueSources = new Set();
-                  const uniqueDocs = props.message.sourceDocuments.filter((doc: { metadata: { URL: string; titulo: string } }) => {
-                    const sourceId = doc.metadata.URL || doc.metadata.titulo;
-                    if (!uniqueSources.has(sourceId)) {
-                      uniqueSources.add(sourceId);
-                      return true;
-                    }
-                    return false;
-                  });
-                  return uniqueDocs;
-                })()}
-              >
+              <For each={[...removeDuplicateURL(props.message)]}>
                 {(src) => {
                   const metadata = src.metadata;
-                  console.log({ metadata });
+                  const URL = isValidURL(src.metadata.source);
+
                   return (
                     <SourceBubble
-                      pageContent={metadata.titulo || 'No lo se Rick'} // Usar el título en lugar del contenido
+                      pageContent={URL ? URL.pathname : src.titulo}
                       metadata={{
                         ...metadata,
                         source: metadata.URL || metadata.source, // Priorizar el URL de la metadata
