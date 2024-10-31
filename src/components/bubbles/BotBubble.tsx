@@ -429,7 +429,6 @@ export const BotBubble = (props: Props) => {
               <span class="px-2 py-[10px] font-semibold">{props.sourceDocsTitle}</span>
             </Show>
             <div style={{ display: 'flex', 'flex-direction': 'row', width: '100%', 'flex-wrap': 'wrap' }}>
-              Fuentes consultadas y donde podrás encontrar más información: <br/>
               <For
                 each={(() => {
                   // Crear un Set para almacenar fuentes únicas basadas en URL
