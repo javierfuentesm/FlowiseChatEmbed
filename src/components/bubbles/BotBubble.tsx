@@ -429,32 +429,35 @@ export const BotBubble = (props: Props) => {
               <span class="px-2 py-[10px] font-semibold">{props.sourceDocsTitle}</span>
             </Show>
             <div style={{ display: 'flex', 'flex-direction': 'row', width: '100%', 'flex-wrap': 'wrap' }}>
-              <For each={(() => {
-                // Crear un Set para almacenar fuentes únicas basadas en URL
-                const uniqueSources = new Set();
-                const uniqueDocs = props.message.sourceDocuments.filter((doc: { metadata: { URL: string; titulo: string } }) => {
-                  const sourceId = doc.metadata.URL || doc.metadata.titulo;
-                  if (!uniqueSources.has(sourceId)) {
-                    uniqueSources.add(sourceId);
-                    return true;
-                  }
-                  return false;
-                });
-                return uniqueDocs;
-              })()}>
+              Fuentes consultadas y donde podrás encontrar más información: <br/>
+              <For
+                each={(() => {
+                  // Crear un Set para almacenar fuentes únicas basadas en URL
+                  const uniqueSources = new Set();
+                  const uniqueDocs = props.message.sourceDocuments.filter((doc: { metadata: { URL: string; titulo: string } }) => {
+                    const sourceId = doc.metadata.URL || doc.metadata.titulo;
+                    if (!uniqueSources.has(sourceId)) {
+                      uniqueSources.add(sourceId);
+                      return true;
+                    }
+                    return false;
+                  });
+                  return uniqueDocs;
+                })()}
+              >
                 {(src) => {
                   const metadata = src.metadata;
                   return (
                     <SourceBubble
-                      pageContent={metadata.Titulo || 'Sin título'} // Usar el título en lugar del contenido
+                      pageContent={metadata.titulo || 'Sin título'} // Usar el título en lugar del contenido
                       metadata={{
                         ...metadata,
                         source: metadata.URL || metadata.source, // Priorizar el URL de la metadata
-                        title: metadata.Titulo || metadata.title // Priorizar el Titulo de la metadata
+                        title: metadata.titulo || metadata.title, // Priorizar el Titulo de la metadata
                       }}
                       onSourceClick={() => {
                         if (metadata.URL) {
-                          window.open(metadata.URL, '_blank');
+                          window.open(metadata.URL);
                         } else if (isValidURL(metadata.source)) {
                           window.open(metadata.source, '_blank');
                         } else {
