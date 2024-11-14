@@ -10,7 +10,7 @@ export const SourceBubble = (props: Props) => (
       data-modal-toggle="defaultModal"
       class="flex justify-start mb-2 items-start animate-fade-in host-container hover:brightness-90 active:brightness-75"
       onClick={() => {
-        console.log('source bubble clicked',props.metadata);
+        console.log('source bubble clicked', props.metadata);
         props.onSourceClick(props.metadata);
       }}
     >
