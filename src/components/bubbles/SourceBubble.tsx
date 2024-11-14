@@ -1,7 +1,7 @@
 type Props = {
   pageContent: string;
   metadata: object;
-  onSourceClick: (metadata:any) => void;
+  onSourceClick: (metadata: any) => void;
 };
 export const SourceBubble = (props: Props) => (
   <>
