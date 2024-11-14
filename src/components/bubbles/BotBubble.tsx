@@ -435,7 +435,7 @@ export const BotBubble = (props: Props) => {
 
                   return (
                     <SourceBubble
-                      pageContent={src.titulo || src.title}
+                      pageContent={metadata.titulo || metadata.title}
                       metadata={{
                         ...metadata,
                         source: metadata.URL || metadata.source, // Priorizar el URL de la metadata
