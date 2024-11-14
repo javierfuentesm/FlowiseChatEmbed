@@ -432,11 +432,10 @@ export const BotBubble = (props: Props) => {
               <For each={[...removeDuplicateURL(props.message)]}>
                 {(src) => {
                   const metadata = src.metadata;
-                  const URL = isValidURL(src.metadata.source);
 
                   return (
                     <SourceBubble
-                      pageContent={URL ? src.titulo : 'Sin contenido'}
+                      pageContent={src.titulo || src.title}
                       metadata={{
                         ...metadata,
                         source: metadata.URL || metadata.source, // Priorizar el URL de la metadata
