@@ -442,15 +442,7 @@ export const BotBubble = (props: Props) => {
                         source: metadata.URL || metadata.source, // Priorizar el URL de la metadata
                         title: metadata.titulo || metadata.title, // Priorizar el Titulo de la metadata
                       }}
-                      onSourceClick={() => {
-                        if (metadata.URL) {
-                          window.location.href = metadata.URL;
-                        } else if (isValidURL(metadata.source)) {
-                          window.location.href = metadata.source;
-                        } else {
-                          props.handleSourceDocumentsClick(src);
-                        }
-                      }}
+                      onSourceClick={() => createEffect(() => props.handleSourceDocumentsClick({ ...metadata, URL: metadata.URL || metadata.source }))}
                     />
                   );
                 }}
