@@ -9,7 +9,10 @@ export const SourceBubble = (props: Props) => (
       data-modal-target="defaultModal"
       data-modal-toggle="defaultModal"
       class="flex justify-start mb-2 items-start animate-fade-in host-container hover:brightness-90 active:brightness-75"
-      onClick={() => props.onSourceClick(props.metadata)}
+      onClick={() => {
+        console.log('source bubble clicked',props.metadata);
+        props.onSourceClick(props.metadata);
+      }}
     >
       <span
         class="px-2 py-1 ml-1 whitespace-pre-wrap max-w-full chatbot-host-bubble"
