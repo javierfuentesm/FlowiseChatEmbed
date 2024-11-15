@@ -8,7 +8,7 @@ export const SourceBubble = (props: Props) => {
   const handleClick = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('source bubble clicked', props.metadata);
+    console.log('source bubble clicked 2', props.metadata);
     props.onSourceClick(props.metadata);
   };
 
