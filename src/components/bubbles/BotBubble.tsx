@@ -434,14 +434,8 @@ export const BotBubble = (props: Props) => {
                   const metadata = src.metadata;
                   console.log({ adio3s: props.handleSourceDocumentsClick });
                   return (
-                    <SourceBubble
-                      pageContent={metadata.titulo || metadata.title}
-                      metadata={{
-                        ...metadata,
-                        source: metadata.URL || metadata.source, // Priorizar el URL de la metadata
-                        title: metadata.titulo || metadata.title, // Priorizar el Titulo de la metadata
-                      }}
-                      onSourceClick={() => {
+                    <button
+                      onClick={() => {
                         props.handleSourceDocumentsClick(src);
                       }}
                     />
