@@ -438,7 +438,9 @@ export const BotBubble = (props: Props) => {
                       onClick={() => {
                         props.handleSourceDocumentsClick(src);
                       }}
-                    />
+                    >
+                      {metadata.title}
+                    </button>
                   );
                 }}
               </For>
