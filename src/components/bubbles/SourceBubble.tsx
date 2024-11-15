@@ -3,20 +3,20 @@ type Props = {
   metadata: object;
   onSourceClick: (metadata: any) => void;
 };
-export const SourceBubble = (props: Props) => (
-  <>
-    <div
-      data-modal-target="defaultModal"
-      data-modal-toggle="defaultModal"
-      class="flex justify-start mb-2 items-start animate-fade-in host-container hover:brightness-90 active:brightness-75"
-      onClick={() => {
-        console.log('source bubble clicked', props.metadata);
-        props.onSourceClick(props.metadata);
-      }}
-    >
-      <span
+
+export const SourceBubble = (props: Props) => {
+  const handleClick = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('source bubble clicked', props.metadata);
+    props.onSourceClick(props.metadata);
+  };
+
+  return (
+    <div class="flex justify-start mb-2 items-start animate-fade-in host-container hover:brightness-90 active:brightness-75">
+      <button
+        onClick={handleClick}
         class="px-2 py-1 ml-1 whitespace-pre-wrap max-w-full chatbot-host-bubble"
-        data-testid="host-bubble"
         style={{
           width: 'max-content',
           'max-width': '80px',
@@ -29,7 +29,7 @@ export const SourceBubble = (props: Props) => (
         }}
       >
         {props.pageContent}
-      </span>
+      </button>
     </div>
-  </>
-);
+  );
+};
