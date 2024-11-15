@@ -107,19 +107,23 @@ export const BotBubble = (props: Props) => {
     }
   };
 
-  const removeDuplicateURL = (message: MessageType) => {
-    const visitedURLs: string[] = [];
-    const newSourceDocuments: any = [];
+  const removeDuplicates = (message: MessageType) => {
+    const visitedIdentifiers = new Set<string>();
+    const newSourceDocuments: any[] = [];
 
     message.sourceDocuments.forEach((source: any) => {
-      if (isValidURL(source.metadata.source) && !visitedURLs.includes(source.metadata.source)) {
-        visitedURLs.push(source.metadata.source);
-        newSourceDocuments.push(source);
-      } else if (!isValidURL(source.metadata.source)) {
+      // Create a unique identifier using URL and title/titulo
+      const sourceUrl = source.metadata.URL || source.metadata.source || '';
+      const sourceTitle = source.metadata.titulo || source.metadata.title || '';
+      const identifier = `${sourceUrl}::${sourceTitle}`;
+
+      // Only add if we haven't seen this combination before
+      if (!visitedIdentifiers.has(identifier)) {
+        visitedIdentifiers.add(identifier);
         newSourceDocuments.push(source);
       }
     });
-    console.log({ newSourceDocuments });
+
     return newSourceDocuments;
   };
 
@@ -430,10 +434,9 @@ export const BotBubble = (props: Props) => {
               <span class="px-2 py-[10px] font-semibold">{props.sourceDocsTitle}</span>
             </Show>
             <div style={{ display: 'flex', 'flex-direction': 'row', width: '100%', 'flex-wrap': 'wrap' }}>
-              <For each={[...removeDuplicateURL(props.message)]}>
+              <For each={[...removeDuplicates(props.message)]}>
                 {(src) => {
                   const metadata = src.metadata;
-                  console.log(metadata);
                   return (
                     <SourceBubble
                       pageContent={metadata.titulo || metadata.title}
