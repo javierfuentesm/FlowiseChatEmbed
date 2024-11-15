@@ -1462,7 +1462,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
                         sourceDocsTitle={props.sourceDocsTitle}
                         handleSourceDocumentsClick={(sourceDocuments) => {
                           setSourcePopupSrc(sourceDocuments);
-                          setSourcePopupOpen(true);
+                          // setSourcePopupOpen(true);
                         }}
                         dateTimeToggle={props.dateTimeToggle}
                         renderHTML={props.renderHTML}
