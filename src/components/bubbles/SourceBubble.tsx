@@ -1,29 +1,19 @@
 type Props = {
   pageContent: string;
   metadata: object;
-  onSourceClick: (metadata: any) => void;
+  onSourceClick?: () => void;
 };
-
-export const SourceBubble = (props: Props) => {
-  const handleClick = (e: MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // Asegurarnos que se ejecute de forma síncrona
-    setTimeout(() => {
-      if (props.onSourceClick) {
-        props.onSourceClick(props.metadata);
-      }
-    }, 0);
-  };
-
-  return (
+export const SourceBubble = (props: Props) => (
+  <>
     <div
-      class="source-bubble-container flex justify-start mb-2 items-start animate-fade-in host-container hover:brightness-90 active:brightness-75"
-      onClick={handleClick}
+      data-modal-target="defaultModal"
+      data-modal-toggle="defaultModal"
+      class="flex justify-start mb-2 items-start animate-fade-in host-container hover:brightness-90 active:brightness-75"
+      onClick={() => props.onSourceClick?.()}
     >
       <span
-        class="source-bubble-content px-2 py-1 ml-1 whitespace-pre-wrap max-w-full chatbot-host-bubble"
+        class="px-2 py-1 ml-1 whitespace-pre-wrap max-w-full chatbot-host-bubble"
+        data-testid="host-bubble"
         style={{
           width: 'max-content',
           'max-width': '80px',
@@ -38,5 +28,5 @@ export const SourceBubble = (props: Props) => {
         {props.pageContent}
       </span>
     </div>
-  );
-};
+  </>
+);

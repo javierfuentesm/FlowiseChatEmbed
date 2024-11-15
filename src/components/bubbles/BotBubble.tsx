@@ -432,7 +432,7 @@ export const BotBubble = (props: Props) => {
               <For each={[...removeDuplicateURL(props.message)]}>
                 {(src) => {
                   const metadata = src.metadata;
-                  console.log({ adios: props.handleSourceDocumentsClick });
+                  console.log({ adio2s: props.handleSourceDocumentsClick });
                   return (
                     <SourceBubble
                       pageContent={metadata.titulo || metadata.title}
@@ -441,7 +441,9 @@ export const BotBubble = (props: Props) => {
                         source: metadata.URL || metadata.source, // Priorizar el URL de la metadata
                         title: metadata.titulo || metadata.title, // Priorizar el Titulo de la metadata
                       }}
-                      onSourceClick={props.handleSourceDocumentsClick}
+                      onSourceClick={() => {
+                        props.handleSourceDocumentsClick(src);
+                      }}
                     />
                   );
                 }}
