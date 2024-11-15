@@ -20,7 +20,7 @@ export const SourceBubble = (props: Props) => (
         'white-space': 'nowrap',
       }}
     >
-      lele {props.pageContent}
+      {props.pageContent}
     </button>
   </div>
 );
