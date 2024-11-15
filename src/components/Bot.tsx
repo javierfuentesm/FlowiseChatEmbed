@@ -1463,8 +1463,6 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
                         sourceDocsTitle={props.sourceDocsTitle}
                         handleSourceDocumentsClick={(sourceDocuments) => {
                           setSourcePopupSrc(sourceDocuments);
-                          // setSourcePopupOpen(true);
-                          console.log('sourceDocuments', sourceDocuments, props.onSourceDocumentsClick);
                           if (props.onSourceDocumentsClick) {
                             props.onSourceDocumentsClick(sourceDocuments);
                           }
