@@ -7,8 +7,8 @@ export const SourceBubble = (props: Props) => (
   <div class="flex justify-start mb-2 items-start animate-fade-in host-container">
     <button
       type="button"
-      onClick={()=>props.onSourceClick()}
-      class="px-2 py-1 ml-1 whitespace-pre-wrap max-w-full chatbot-host-bubble"
+      onClick={() => props.onSourceClick()}
+      class="px-2 py-1 ml-1 whitespace-pre-wrap max-w-full"
       style={{
         width: 'max-content',
         'max-width': '80px',
@@ -20,7 +20,7 @@ export const SourceBubble = (props: Props) => (
         'white-space': 'nowrap',
       }}
     >
-    lala  {props.pageContent}
+      lala {props.pageContent}
     </button>
   </div>
 );

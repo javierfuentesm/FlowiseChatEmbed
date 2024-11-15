@@ -432,7 +432,7 @@ export const BotBubble = (props: Props) => {
               <For each={[...removeDuplicateURL(props.message)]}>
                 {(src) => {
                   const metadata = src.metadata;
-                  console.log({ adio2s: props.handleSourceDocumentsClick });
+                  console.log({ adio3s: props.handleSourceDocumentsClick });
                   return (
                     <SourceBubble
                       pageContent={metadata.titulo || metadata.title}
