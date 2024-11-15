@@ -153,7 +153,7 @@ export type BotProps = {
   disclaimer?: DisclaimerPopUpTheme;
   dateTimeToggle?: DateTimeToggleTheme;
   renderHTML?: boolean;
-  handleSourceDocumentsClick: (source: any) => void;
+  onSourceDocumentsClick?: (source: any) => void;
 };
 
 export type LeadsConfig = {
@@ -1464,7 +1464,9 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
                         handleSourceDocumentsClick={(sourceDocuments) => {
                           setSourcePopupSrc(sourceDocuments);
                           // setSourcePopupOpen(true);
-                          props.handleSourceDocumentsClick(sourceDocuments);
+                          if(props.onSourceDocumentsClick) {
+                            props.onSourceDocumentsClick(sourceDocuments);
+                          }
                         }}
                         dateTimeToggle={props.dateTimeToggle}
                         renderHTML={props.renderHTML}

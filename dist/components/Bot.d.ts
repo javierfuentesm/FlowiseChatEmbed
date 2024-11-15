@@ -100,7 +100,7 @@ export type BotProps = {
     disclaimer?: DisclaimerPopUpTheme;
     dateTimeToggle?: DateTimeToggleTheme;
     renderHTML?: boolean;
-    handleSourceDocumentsClick: (source: any) => void;
+    onSourceDocumentsClick?: (source: any) => void;
 };
 export type LeadsConfig = {
     status: boolean;
