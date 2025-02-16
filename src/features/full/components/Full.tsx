@@ -53,7 +53,7 @@ export const Full = (props: FullProps, { element }: { element: HTMLElement }) =>
             height: props.theme?.chatWindow?.height ? `${props.theme?.chatWindow?.height.toString()}px` : '100dvh',
             width: props.theme?.chatWindow?.width ? `${props.theme?.chatWindow?.width.toString()}px` : '100%',
             margin: '0px',
-            overflow: 'hidden', // Ensure no extra scrolling due to content overflow
+            overflow: 'hidden',
           }}
         >
           <Bot
@@ -85,6 +85,7 @@ export const Full = (props: FullProps, { element }: { element: HTMLElement }) =>
             disclaimer={props.theme?.disclaimer}
             dateTimeToggle={props.theme?.chatWindow?.dateTimeToggle}
             renderHTML={props.theme?.chatWindow?.renderHTML}
+            onSourceDocumentsClick={props.onSourceDocumentsClick}
           />
         </div>
       </Show>
