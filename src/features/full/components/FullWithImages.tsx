@@ -9,7 +9,7 @@ const defaultIconColor = 'white';
 
 export type FullProps = BotProps & BubbleParams;
 
-export const FullWithImages = (props: FullProps & { element?: HTMLElement }) => {
+export const FullWithImages = (props: FullProps, { element }: { element: HTMLElement }) => {
   const [isBotDisplayed, setIsBotDisplayed] = createSignal(false);
 
   const launchBot = () => {
@@ -29,7 +29,7 @@ export const FullWithImages = (props: FullProps & { element?: HTMLElement }) => 
   });
 
   onMount(() => {
-    if (props.element) botLauncherObserver.observe(props.element);
+    botLauncherObserver.observe(element);
   });
 
   onCleanup(() => {
