@@ -383,6 +383,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
       }
       // Procesar el mensaje si hay un messageProcessor
       if (props.messageProcessor) {
+        console.log('allMessages[allMessages.length - 1]', allMessages[allMessages.length - 1]);
         allMessages[allMessages.length - 1] = props.messageProcessor(allMessages[allMessages.length - 1]);
       }
       addChatMessage(allMessages);

@@ -48,7 +48,7 @@ const processMessageWithImages = (message: MessageType): MessageType => {
       }
     }
   });
-
+  console.log('processedMessage', processedMessage);
   return {
     ...message,
     message: processedMessage,
