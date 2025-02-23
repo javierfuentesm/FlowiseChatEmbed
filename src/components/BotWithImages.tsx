@@ -3,7 +3,7 @@ import { MessageType } from './Bot';
 
 const extractGoogleDriveImageUrls = (metadata: any): string[] => {
   const imageUrls: string[] = [];
-  
+
   // Función para convertir URL de Google Drive a URL directa
   const convertToDirectUrl = (url: string) => {
     // El formato es: https://drive.google.com/file/d/ID/view?usp=sharing
@@ -35,14 +35,14 @@ const processMessageWithImages = (message: MessageType): MessageType => {
   }
 
   let processedMessage = message.message;
-  
+
   message.sourceDocuments.forEach((doc: any) => {
     if (doc.metadata) {
       const imageUrls = extractGoogleDriveImageUrls(doc.metadata);
       if (imageUrls.length > 0) {
         // Agregar las imágenes al final del mensaje
         processedMessage += '\n\n';
-        imageUrls.forEach(url => {
+        imageUrls.forEach((url) => {
           processedMessage += `<img src="${url}" alt="Imagen relacionada" style="max-width: 100%; margin: 10px 0;" />\n`;
         });
       }
@@ -51,7 +51,7 @@ const processMessageWithImages = (message: MessageType): MessageType => {
 
   return {
     ...message,
-    message: processedMessage
+    message: processedMessage,
   };
 };
 
@@ -59,8 +59,8 @@ export const BotWithImages = (props: any) => {
   const enhancedProps = {
     ...props,
     renderHTML: true, // Forzar renderizado HTML para las imágenes
-    messageProcessor: processMessageWithImages
+    messageProcessor: processMessageWithImages,
   };
 
   return <Bot {...enhancedProps} />;
-}; 
+};

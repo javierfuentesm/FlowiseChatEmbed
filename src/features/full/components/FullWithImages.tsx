@@ -92,4 +92,4 @@ export const FullWithImages = (props: FullProps & { element?: HTMLElement }) => 
       </Show>
     </>
   );
-}; 
+};

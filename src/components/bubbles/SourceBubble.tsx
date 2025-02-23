@@ -10,7 +10,7 @@ type Props = {
     pdf?: {
       info?: {
         Title?: string;
-      }
+      };
     };
     [key: string]: any;
   };
@@ -20,16 +20,12 @@ type Props = {
 export const SourceBubble = (props: Props) => {
   // Solo mostrar si es un PDF o si no tiene URLs (comportamiento por defecto)
   const shouldShow = !props.metadata.URLS || props.metadata.pdf;
-  
+
   if (!shouldShow) {
     return null;
   }
 
-  const title = props.metadata.Titulo || 
-                props.metadata.titulo || 
-                props.metadata.title || 
-                props.metadata.pdf?.info?.Title || 
-                props.pageContent;
+  const title = props.metadata.Titulo || props.metadata.titulo || props.metadata.title || props.metadata.pdf?.info?.Title || props.pageContent;
 
   return (
     <div
