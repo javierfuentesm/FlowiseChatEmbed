@@ -65,6 +65,7 @@ export type MessageType = {
     id?: string;
     followUpPrompts?: string;
     dateTime?: string;
+    feedback?: any | null;
 };
 type observerConfigType = (accessor: string | boolean | object | MessageType[]) => void;
 export type observersConfigType = Record<'observeUserInput' | 'observeLoading' | 'observeMessages', observerConfigType>;
@@ -101,6 +102,7 @@ export type BotProps = {
     dateTimeToggle?: DateTimeToggleTheme;
     renderHTML?: boolean;
     onSourceDocumentsClick?: (source: any) => void;
+    messageProcessor?: (message: MessageType) => MessageType;
 };
 export type LeadsConfig = {
     status: boolean;
