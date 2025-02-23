@@ -13,7 +13,7 @@ const isImageUrl = async (url: string): Promise<boolean> => {
   }
 };
 
-const extractGoogleDriveUrls = async (metadata: any): Promise<{ imageUrls: string[], pdfUrls: string[] }> => {
+const extractGoogleDriveUrls = async (metadata: any): Promise<{ imageUrls: string[]; pdfUrls: string[] }> => {
   const imageUrls: string[] = [];
   const pdfUrls: string[] = [];
 
@@ -47,7 +47,7 @@ const extractGoogleDriveUrls = async (metadata: any): Promise<{ imageUrls: strin
     for (const url of metadata.URLS) {
       console.log('🔍 Procesando URL:', url);
       const processedUrl = processUrl(url);
-      
+
       if (processedUrl) {
         console.log('✅ URL convertida:', processedUrl);
         // Intentamos determinar si es una imagen
@@ -68,7 +68,7 @@ const extractGoogleDriveUrls = async (metadata: any): Promise<{ imageUrls: strin
   if (metadata.URL) {
     console.log('🔍 Procesando URL individual:', metadata.URL);
     const processedUrl = processUrl(metadata.URL);
-    
+
     if (processedUrl) {
       console.log('✅ URL individual convertida:', processedUrl);
       if (await isImageUrl(processedUrl)) {
@@ -108,7 +108,7 @@ const processMessageWithImages = async (message: MessageType): Promise<MessageTy
 
       if (imageUrls.length > 0 || pdfUrls.length > 0) {
         processedMessage += '\n\n';
-        
+
         // Agregar imágenes
         imageUrls.forEach((url) => {
           processedMessage += `
