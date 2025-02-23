@@ -30,17 +30,22 @@ const extractGoogleDriveImageUrls = (metadata: any): string[] => {
 };
 
 const processMessageWithImages = (message: MessageType): MessageType => {
+  console.log('processMessageWithImages called with:', message);
+  
   if (message.type !== 'apiMessage' || !message.sourceDocuments) {
+    console.log('Message skipped - not apiMessage or no sourceDocuments');
     return message;
   }
 
   let processedMessage = message.message;
+  console.log('Processing sourceDocuments:', message.sourceDocuments);
 
   message.sourceDocuments.forEach((doc: any) => {
+    console.log('Processing doc:', doc);
     if (doc.metadata) {
       const imageUrls = extractGoogleDriveImageUrls(doc.metadata);
+      console.log('Extracted imageUrls:', imageUrls);
       if (imageUrls.length > 0) {
-        // Agregar las imágenes al final del mensaje
         processedMessage += '\n\n';
         imageUrls.forEach((url) => {
           processedMessage += `<img src="${url}" alt="Imagen relacionada" style="max-width: 100%; margin: 10px 0;" />\n`;
@@ -48,7 +53,8 @@ const processMessageWithImages = (message: MessageType): MessageType => {
       }
     }
   });
-  console.log('processedMessage', processedMessage);
+  
+  console.log('Final processedMessage:', processedMessage);
   return {
     ...message,
     message: processedMessage,

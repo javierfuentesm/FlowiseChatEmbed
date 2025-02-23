@@ -11,6 +11,8 @@ export type FullProps = BotProps & BubbleParams;
 
 export const FullWithImages = (props: FullProps, { element }: { element: HTMLElement }) => {
   const [isBotDisplayed, setIsBotDisplayed] = createSignal(false);
+  
+  console.log('FullWithImages props:', props);
 
   const launchBot = () => {
     setIsBotDisplayed(true);
