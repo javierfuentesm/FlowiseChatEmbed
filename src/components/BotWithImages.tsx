@@ -6,24 +6,53 @@ const extractGoogleDriveImageUrls = (metadata: any): string[] => {
 
   // Función para convertir URL de Google Drive a URL directa
   const convertToDirectUrl = (url: string) => {
-    // El formato es: https://drive.google.com/file/d/ID/view?usp=sharing
-    const fileId = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)?.[1];
+    // Diferentes formatos posibles de URL de Google Drive
+    const patterns = [
+      /\/file\/d\/([a-zA-Z0-9_-]+)\/view/,  // Formato compartir
+      /\/file\/d\/([a-zA-Z0-9_-]+)/,        // Formato directo
+      /id=([a-zA-Z0-9_-]+)/,                // Formato con id
+      /([a-zA-Z0-9_-]{25,})/                // ID directo
+    ];
+
+    let fileId = null;
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match && match[1]) {
+        fileId = match[1];
+        break;
+      }
+    }
+
     if (!fileId) return null;
+
+    // Usar el endpoint de exportación directo de Google Drive
     return `https://drive.google.com/uc?export=view&id=${fileId}`;
   };
 
   // Revisar URLS si existe
   if (metadata.URLS && Array.isArray(metadata.URLS)) {
     metadata.URLS.forEach((url: string) => {
+      console.log('🔍 Procesando URL:', url);
       const directUrl = convertToDirectUrl(url);
-      if (directUrl) imageUrls.push(directUrl);
+      if (directUrl) {
+        console.log('✅ URL convertida:', directUrl);
+        imageUrls.push(directUrl);
+      } else {
+        console.log('❌ No se pudo convertir la URL');
+      }
     });
   }
 
   // Revisar URL individual si existe
   if (metadata.URL) {
+    console.log('🔍 Procesando URL individual:', metadata.URL);
     const directUrl = convertToDirectUrl(metadata.URL);
-    if (directUrl) imageUrls.push(directUrl);
+    if (directUrl) {
+      console.log('✅ URL individual convertida:', directUrl);
+      imageUrls.push(directUrl);
+    } else {
+      console.log('❌ No se pudo convertir la URL individual');
+    }
   }
 
   return imageUrls;
@@ -50,7 +79,8 @@ const processMessageWithImages = (message: MessageType): MessageType => {
       if (imageUrls.length > 0) {
         processedMessage += '\n\n';
         imageUrls.forEach((url) => {
-          processedMessage += `<img src="${url}" alt="Imagen relacionada" style="max-width: 100%; margin: 10px 0;" />\n`;
+          // Agregar atributos para mejorar la carga y el manejo de errores
+          processedMessage += `<img src="${url}" alt="Imagen relacionada" style="max-width: 100%; margin: 10px 0;" loading="lazy" onerror="this.onerror=null; this.src='${url}?alt=media';" />\n`;
         });
       }
     }
