@@ -1,7 +1,19 @@
 import { Bot } from './Bot';
 import { MessageType } from './Bot';
 
-const extractGoogleDriveUrls = (metadata: any): { imageUrls: string[], pdfUrls: string[] } => {
+// Función auxiliar para verificar si una URL es una imagen
+const isImageUrl = async (url: string): Promise<boolean> => {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    const contentType = response.headers.get('content-type');
+    return contentType?.startsWith('image/') || false;
+  } catch {
+    // Si no podemos verificar, asumimos que es una imagen
+    return true;
+  }
+};
+
+const extractGoogleDriveUrls = async (metadata: any): Promise<{ imageUrls: string[], pdfUrls: string[] }> => {
   const imageUrls: string[] = [];
   const pdfUrls: string[] = [];
 
@@ -26,53 +38,45 @@ const extractGoogleDriveUrls = (metadata: any): { imageUrls: string[], pdfUrls: 
 
     if (!fileId) return null;
 
-    // Verificar si es un PDF (basado en la URL o metadata)
-    const isPDF = url.toLowerCase().includes('.pdf') || 
-                 (metadata.pdf && metadata.pdf.info) ||
-                 (metadata.mimeType && metadata.mimeType.includes('pdf'));
-
-    if (isPDF) {
-      return {
-        url: `https://drive.google.com/file/d/${fileId}/preview`,
-        type: 'pdf'
-      };
-    } else {
-      // Para imágenes, usamos un formato diferente que es más confiable
-      return {
-        url: `https://lh3.googleusercontent.com/d/${fileId}`,
-        type: 'image'
-      };
-    }
+    // Retornamos la URL en formato de visualización
+    return `https://drive.google.com/uc?export=view&id=${fileId}`;
   };
 
   // Procesar URLs del array URLS
   if (metadata.URLS && Array.isArray(metadata.URLS)) {
-    metadata.URLS.forEach((url: string) => {
+    for (const url of metadata.URLS) {
       console.log('🔍 Procesando URL:', url);
-      const result = processUrl(url);
-      if (result) {
-        console.log(`✅ URL convertida (${result.type}):`, result.url);
-        if (result.type === 'pdf') {
-          pdfUrls.push(result.url);
+      const processedUrl = processUrl(url);
+      
+      if (processedUrl) {
+        console.log('✅ URL convertida:', processedUrl);
+        // Intentamos determinar si es una imagen
+        if (await isImageUrl(processedUrl)) {
+          console.log('📸 Detectada como imagen');
+          imageUrls.push(processedUrl);
         } else {
-          imageUrls.push(result.url);
+          console.log('📄 Detectada como PDF');
+          pdfUrls.push(url); // Usamos la URL original para PDFs
         }
       } else {
         console.log('❌ No se pudo procesar la URL');
       }
-    });
+    }
   }
 
   // Procesar URL individual
   if (metadata.URL) {
     console.log('🔍 Procesando URL individual:', metadata.URL);
-    const result = processUrl(metadata.URL);
-    if (result) {
-      console.log(`✅ URL individual convertida (${result.type}):`, result.url);
-      if (result.type === 'pdf') {
-        pdfUrls.push(result.url);
+    const processedUrl = processUrl(metadata.URL);
+    
+    if (processedUrl) {
+      console.log('✅ URL individual convertida:', processedUrl);
+      if (await isImageUrl(processedUrl)) {
+        console.log('📸 Detectada como imagen');
+        imageUrls.push(processedUrl);
       } else {
-        imageUrls.push(result.url);
+        console.log('📄 Detectada como PDF');
+        pdfUrls.push(metadata.URL); // Usamos la URL original para PDFs
       }
     } else {
       console.log('❌ No se pudo procesar la URL individual');
@@ -82,7 +86,7 @@ const extractGoogleDriveUrls = (metadata: any): { imageUrls: string[], pdfUrls: 
   return { imageUrls, pdfUrls };
 };
 
-const processMessageWithImages = (message: MessageType): MessageType => {
+const processMessageWithImages = async (message: MessageType): Promise<MessageType> => {
   console.log('⭐ processMessageWithImages llamado');
   console.log('📝 Tipo de mensaje:', message.type);
   console.log('📄 ¿Tiene sourceDocuments?:', !!message.sourceDocuments);
@@ -95,20 +99,20 @@ const processMessageWithImages = (message: MessageType): MessageType => {
   let processedMessage = message.message;
   console.log('🔍 Procesando sourceDocuments:', message.sourceDocuments);
 
-  message.sourceDocuments.forEach((doc: any) => {
+  for (const doc of message.sourceDocuments) {
     if (doc.metadata) {
       console.log('📎 Metadata del documento:', doc.metadata);
-      const { imageUrls, pdfUrls } = extractGoogleDriveUrls(doc.metadata);
+      const { imageUrls, pdfUrls } = await extractGoogleDriveUrls(doc.metadata);
       console.log('🖼️ URLs de imágenes extraídas:', imageUrls);
       console.log('📄 URLs de PDFs extraídos:', pdfUrls);
 
       if (imageUrls.length > 0 || pdfUrls.length > 0) {
         processedMessage += '\n\n';
         
-        // Agregar imágenes con un contenedor div para mejor control
+        // Agregar imágenes
         imageUrls.forEach((url) => {
           processedMessage += `
-            <div style="margin: 10px 0; max-width: 100%; text-align: center;">
+            <div style="margin: 10px 0;">
               <img 
                 src="${url}" 
                 alt="Imagen relacionada" 
@@ -119,23 +123,18 @@ const processMessageWithImages = (message: MessageType): MessageType => {
             </div>`;
         });
 
-        // Agregar PDFs
+        // Agregar PDFs como links
         pdfUrls.forEach((url) => {
           processedMessage += `
             <div style="margin: 10px 0;">
-              <iframe 
-                src="${url}" 
-                width="100%" 
-                height="500px" 
-                frameborder="0" 
-                allowfullscreen="true" 
-                style="border: 1px solid #ccc; border-radius: 4px;">
-              </iframe>
+              <a href="${url}" target="_blank" style="display: inline-block; padding: 8px 16px; background-color: #f0f0f0; border-radius: 4px; text-decoration: none; color: #333;">
+                📄 Ver PDF
+              </a>
             </div>`;
         });
       }
     }
-  });
+  }
 
   console.log('✅ Mensaje final procesado:', processedMessage);
   return {
