@@ -30,21 +30,23 @@ const extractGoogleDriveImageUrls = (metadata: any): string[] => {
 };
 
 const processMessageWithImages = (message: MessageType): MessageType => {
-  console.log('processMessageWithImages called with:', message);
-  
+  console.log('⭐ processMessageWithImages llamado');
+  console.log('📝 Tipo de mensaje:', message.type);
+  console.log('📄 ¿Tiene sourceDocuments?:', !!message.sourceDocuments);
+
   if (message.type !== 'apiMessage' || !message.sourceDocuments) {
-    console.log('Message skipped - not apiMessage or no sourceDocuments');
+    console.log('❌ Mensaje saltado - no es apiMessage o no tiene sourceDocuments');
     return message;
   }
 
   let processedMessage = message.message;
-  console.log('Processing sourceDocuments:', message.sourceDocuments);
+  console.log('🔍 Procesando sourceDocuments:', message.sourceDocuments);
 
   message.sourceDocuments.forEach((doc: any) => {
-    console.log('Processing doc:', doc);
     if (doc.metadata) {
+      console.log('📎 Metadata del documento:', doc.metadata);
       const imageUrls = extractGoogleDriveImageUrls(doc.metadata);
-      console.log('Extracted imageUrls:', imageUrls);
+      console.log('🖼️ URLs de imágenes extraídas:', imageUrls);
       if (imageUrls.length > 0) {
         processedMessage += '\n\n';
         imageUrls.forEach((url) => {
@@ -53,8 +55,8 @@ const processMessageWithImages = (message: MessageType): MessageType => {
       }
     }
   });
-  
-  console.log('Final processedMessage:', processedMessage);
+
+  console.log('✅ Mensaje final procesado:', processedMessage);
   return {
     ...message,
     message: processedMessage,

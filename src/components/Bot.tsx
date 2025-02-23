@@ -381,11 +381,7 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
         playReceiveSound();
         hasSoundPlayed = true;
       }
-      // Procesar el mensaje si hay un messageProcessor
-      if (props.messageProcessor) {
-        console.log('allMessages[allMessages.length - 1]', allMessages[allMessages.length - 1]);
-        allMessages[allMessages.length - 1] = props.messageProcessor(allMessages[allMessages.length - 1]);
-      }
+      // No procesar el mensaje aquí ya que es un chunk
       addChatMessage(allMessages);
       return allMessages;
     });
@@ -404,7 +400,9 @@ export const Bot = (botProps: BotProps & { class?: string }) => {
     setMessages((data) => {
       const updated = data.map((item, i) => {
         if (i === data.length - 1) {
-          return { ...item, sourceDocuments };
+          const updatedMessage = { ...item, sourceDocuments };
+          // Procesar el mensaje cuando lleguen los sourceDocuments
+          return props.messageProcessor ? props.messageProcessor(updatedMessage) : updatedMessage;
         }
         return item;
       });
